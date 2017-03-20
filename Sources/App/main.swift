@@ -9,12 +9,14 @@ try drop.addProvider(VaporMySQL.Provider.self)
 // Database preparation
 drop.preparations = [
     User.self,
-    Post.self
+    Post.self,
+    Follower.self
 ]
 
 // Prepare middleware
 drop.middleware.append(LocalizationMiddleware())
 drop.middleware.append(AuthMiddleware(user: User.self))
+drop.middleware.append(AuthCheckMiddleware())
 
 // Register our custom renderer
 // The custom renderer will inject user-variables when relevant
@@ -29,10 +31,7 @@ renderer.stem.register(LocalizationTag())
 // Set up all collections
 drop.collection(LoginCollection())
 drop.collection(RegisterCollection())
-
-// Static routes
-drop.get() { request in
-    return try drop.view.make("welcome", for: request)
-}
+drop.collection(ProfileCollection())
+drop.collection(TimelineCollection())
 
 drop.run() // Wee

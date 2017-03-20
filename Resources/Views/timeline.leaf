@@ -1,0 +1,18 @@
+#extend("base")
+
+#export("head") {
+    <title>Vetle Økland | @bordplate</title>
+}
+
+#export("body") {
+	<div class="container">
+		<div class="list-group">
+			#loop(posts, "post") {
+				<div class="list-group-item">
+					<h4>#(post.user.display_name) <small>@#(post.user.username)</small></h4>
+					<p>#(post.content)</p>
+				</div>
+			}
+		</div>
+	</div>
+}

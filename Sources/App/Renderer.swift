@@ -21,7 +21,14 @@ public final class Renderer: ViewRenderer {
     
     public func make(_ path: String, _ context: Node) throws -> View {
         var appendingContext = context
-        appendingContext["test"] = "Hello!"
+        appendingContext["authorized"] = false
+        
+        if let storage = context["request"]?["storage"] {
+            if storage["authorized"] == true {
+                appendingContext["authorized"] = true
+                appendingContext["logged_user"] = storage["authorized_user"]
+            }
+        }
         
         let leaf = try stem.spawnLeaf(named: path)
         let context = Context(appendingContext.makeNode())

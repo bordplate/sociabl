@@ -14,8 +14,6 @@ class LocalizationTag: Tag {
     
     /// Only really takes 1 argument
     func run(stem: Stem, context: LeafContext, tagTemplate: TagTemplate, arguments: [Argument]) throws -> Node? {
-        
-        
         if arguments.count < 1 {
             return nil // We need at least one argument
         }

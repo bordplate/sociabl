@@ -2,9 +2,6 @@
 
 #export("head") {
 	<title>#l("register", "Register for") #config("name")</title>
-
-    <link href="https://fonts.googleapis.com/css?family=Quicksand:400,700,300" rel="stylesheet">
-	<link rel="stylesheet" href="/styles/app.css">
 }
 
 #export("body") {

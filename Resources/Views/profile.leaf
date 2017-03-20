@@ -1,0 +1,32 @@
+#extend("base")
+
+#export("head") {
+    <title>Vetle Økland | @bordplate</title>
+}
+
+#export("body") {
+	<div class="container">
+		<div id="profile-jumbo" class="well">
+			<div class="page-header">
+				<h1>#(user.display_name) <small>@#(user.username)</small></h1>
+			</div>
+			<ul class="nav nav-pills" role="tablist">
+				<li role="presentation" class="active"><a href="">#l("Posts") <span class="badge">#(user.post_count)</span></a>
+				<li role="presentation"><a href="">#l("Followers") <span class="badge">#(user.follower_count)</span></a>
+				<li role="presentation"><a href="">#l("Following") <span class="badge">#(user.following_count)</span></a>
+				<li role="presentation"><a href="">#l("Likes") <span class="badge">#(user.like_count)</span></a>
+			</ul>
+			<form method="post" action="#(user.id)/follow">
+				<input type="submit" name="button" class="btn btn-default" value="#l("Follow")" #equal(authorized, false) { disabled } />
+			</form>
+		</div>
+		<div class="list-group">
+			#loop(user.posts, "post") {
+				<div class="list-group-item">
+					<h4>#(post.user.display_name) <small>@#(post.user.username)</small></h4>
+					<p>#(post.content)</p>
+				</div>
+			}
+		</div>
+	</div>
+}

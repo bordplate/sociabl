@@ -72,6 +72,92 @@ final class User: Model {
             "join_date": joinDate.timeIntervalSince1970 // Convert Date to Unix timestamp
         ])
     }
+    
+    /// Use this for when making a Node that should be displayed as a profile.
+    func makeProfileNode() throws -> Node {
+        return try Node(node: [
+            "id": id,
+            "username": username,
+            "display_name": displayName,
+            "profile_description": profileDescription,
+            "profile_img_url": profileImgUrl,
+            "join_date": joinDate.timeIntervalSince1970,
+            "post_count": try self.postCount(),
+            "like_count": try self.likeCount(),
+            "following_count": try self.followingCount(),
+            "follower_count": try self.followerCount(),
+            "posts": try self.posts().makeNode(context: ["public": true])
+        ])
+    }
+    
+    /// For when a user should be embedded in e.g. a post.
+    func makeEmbedNode() throws -> Node {
+        return try Node(node: [
+            "id": id,
+            "username": username,
+            "display_name": displayName,
+            "profile_img_url": profileImgUrl
+        ])
+    }
+    
+    /// Returns the timeline for the user.
+    func timeline() throws -> Node? {
+        if let id = self.id {
+            if let subjects = try Follower.subjects(for: id)?.nodeArray {
+                return try Post.posts(for: subjects).makeNode(context: ["public": true])
+            }
+        }
+        
+        return nil
+    }
+}
+
+// - Interactions with other users
+extension User {
+    /**
+     Follows provided subject given valid credentials.
+     
+     ## Discusion
+     This probably should have some sort of check to see that the subject
+        does not have a private profile, if that ever becomes a thing.
+     
+     - parameters:
+        - subject: The user of the user to follow.
+     */
+    public func followUser(subject: User) throws {
+        guard let subjectId = subject.id else {
+            throw Abort.badRequest
+        }
+        
+        if try self.children("owner", Follower.self).filter("subject", subjectId).count() > 0 {
+            throw Abort.badRequest
+        }
+        
+        var followerRelationship = Follower(owner: self.id, subject: subject.id)
+        try followerRelationship.save()
+    }
+}
+
+extension User {
+    public func postCount() throws -> Int {
+        return try self.children(nil, Post.self).count()
+    }
+    
+    public func likeCount() throws -> Int {
+        return 0
+    }
+    
+    public func followingCount() throws -> Int {
+        return try self.children("owner", Follower.self).count()
+    }
+    
+    public func followerCount() throws -> Int {
+        return try self.children("subject", Follower.self).count()
+    }
+    
+    public func posts() throws -> [Post] {
+        return try self.children(nil, Post.self).all()
+    }
 }
 
 extension User: Preparation {
