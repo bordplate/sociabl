@@ -1,15 +1,5 @@
-# Basic Template
+# What is this?
+This is a generic social network running on top of the Vapor Framework for Swift and MySQL. It's goal is to be some sort of microblogging where people can follow each other. 
 
-A basic vapor template for starting a new Vapor web application. If you're using vapor toolbox, you can use: `vapor new --template=basic`
-
-## 📖 Documentation
-
-Visit the Vapor web framework's [documentation](http://docs.vapor.codes) for instructions on how to use this package.
-
-## 💧 Community
-
-Join the welcoming community of fellow Vapor developers in [slack](http://vapor.team).
-
-## 🔧 Compatibility
-
-This package has been tested on macOS and Ubuntu.
+# Why? 
+I'm going to use it in a future workshop for teaching iOS development. And it's fun to just make stuff.
