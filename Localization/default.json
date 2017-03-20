@@ -1,5 +1,17 @@
 {
     "welcome": {
-        "title": "It works."
-    }
+        "Welcome to": "Welcome to"
+    },
+    "login": {
+        "Log in to": "Log in to",
+        "Username": "Username",
+        "Password": "Password",
+        "Log in": "Log in"
+    },
+    "register": {
+        "Register for": "Register for",
+        "Register": "Register",
+        "Re-enter password": "Re-enter password"
+    },
+    "tagline": "The generic social network"
 }

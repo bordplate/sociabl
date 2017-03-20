@@ -1,7 +1,7 @@
 #extend("base")
 
 #export("head") {
-	<title>#l("welcome", "Welcome to") #config("name")</title>
+	<title>#l("register", "Register for") #config("name")</title>
 
     <link href="https://fonts.googleapis.com/css?family=Quicksand:400,700,300" rel="stylesheet">
 	<link rel="stylesheet" href="/styles/app.css">
@@ -9,15 +9,10 @@
 
 #export("body") {
 	<main>
-		<h1>#l("welcome", "Welcome to") #config("name")</h1>
-		<h3>#l("tagline")</h3>
-		<h4>#l("welcome", "Log in")<h4>
-		<form method="post" action="/login">
-			<input type="text" name="username" placeholder="#l("welcome", "Username")" />
-			<input type="password" name="password" placeholder="#l("welcome", "Password")" />
-			<input type="submit" value="#l("welcome", "Log in")" />
-		</form>
-		<h4>#l("register", "Register")</h4>
+		<h1>#l("register", "Register for") #config("name")</h1>
+		#if(invalid) {
+			<h2>#(message)</h2>
+		}
 		<form method="post" action="/register">
 			<input type="email" name="email" placeholder="#l("register", "E-mail")" />
 			<input type="text" name="username" placeholder="#l("login", "Username")" />

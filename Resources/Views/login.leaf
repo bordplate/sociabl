@@ -1,0 +1,22 @@
+#extend("base")
+
+#export("head") {
+	<title>#l("login", "Log in to") #config("name")</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Quicksand:400,700,300" rel="stylesheet">
+	<link rel="stylesheet" href="/styles/app.css">
+}
+
+#export("body") {
+	<main>
+		<h1>#l("login", "Log in to") #config("name")</h1>
+		#if(invalid) {
+			<h2>Invalid username and/or password</h2>
+		}
+		<form method="post" action="/login">
+			<input type="text" name="username" placeholder="#l("login", "Username")" />
+			<input type="password" name="password" placeholder="#l("login", "Password")" />
+			<input type="submit" value="#l("login", "Log in")" />
+		</form>
+	</main>
+}

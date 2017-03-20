@@ -1,5 +1,9 @@
 {
     "welcome": {
-    	"title": "It works."
-    }
+    	"Welcome to": "Welcome to",
+        "Username": "Username",
+        "Password": "Password",
+        "Log in": "Log in"
+    },
+    "tagline": "The generic social network"
 }

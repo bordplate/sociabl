@@ -1,0 +1,11 @@
+{
+    "welcome": {
+        "Welcome to": "Velkommen til",
+        "Username": "Brukernavn",
+        "Password": "Passord",
+        "Log in": "Logg inn",
+        "Register": "Registrer deg",
+        "Re-enter password": "Tast inn passord på ny"
+    },
+    "tagline": "Det generiske sosiale nettverket"
+}

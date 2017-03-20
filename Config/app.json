@@ -1,3 +1,7 @@
 {
-	"foo": "foo-bar"
+	"foo": "foo-bar",
+    "public": {
+        "name": "Sociabl",
+        "tagline": "The generic social network"
+    }
 }
