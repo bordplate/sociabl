@@ -22,6 +22,7 @@ final class User: Model {
         case postExceedsMaxLength
         
         case alreadyFollowing
+        case notFollowing
     }
     
     var id: Node?
@@ -136,16 +137,24 @@ extension User {
         - subject: The user of the user to follow.
      */
     public func follow(user subject: User) throws {
-        guard let subjectId = subject.id else {
-            throw Abort.badRequest
-        }
-        
-        if try self.children("owner", Follower.self).filter("subject", subjectId).count() > 0 {
+        if try self.isFollowing(user: subject) {
             throw Error.alreadyFollowing
         }
         
         var followerRelationship = Follower(owner: self.id, subject: subject.id)
         try followerRelationship.save()
+    }
+    
+    public func unfollow(user subject: User) throws {
+        guard let subjectId = subject.id else {
+            throw Abort.badRequest
+        }
+        
+        if let relation = try self.children("owner", Follower.self).filter("subject", subjectId).first() {
+            try relation.delete()
+        } else {
+            throw Error.notFollowing
+        }
     }
     
     public func submit(post content: String) throws {
@@ -155,6 +164,18 @@ extension User {
         
         var post = Post(content: content, date: Date(), user: self)
         try post.save()
+    }
+    
+    public func isFollowing(user subject: User) throws -> Bool {
+        guard let subjectId = subject.id else {
+            throw Abort.badRequest
+        }
+        
+        if try self.children("owner", Follower.self).filter("subject", subjectId).count() > 0 {
+            return true
+        }
+        
+        return false
     }
 }
 

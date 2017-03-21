@@ -11,9 +11,15 @@
 				<h1>
 					#(user.display_name) <small>@#(user.username)</small>
 					
-					<form method="post" action="#(user.id)/follow">
-						<input type="submit" name="button" class="btn btn-default" value="#l("Follow")" #equal(authorized, false) { disabled } />
-					</form>
+					#if(following) {
+						<form method="post" action="#(user.id)/unfollow">
+							<input type="submit" name="button" class="btn btn-danger" value="#l("Unfollow")" />
+						</form>
+					} ##else() {
+						<form method="post" action="#(user.id)/follow">
+							<input type="submit" name="button" class="btn btn-default" value="#l("Follow")" #equal(authorized, false) { disabled } />
+						</form>	
+					}
 				</h1>
 			</div>
 			<ul class="nav nav-pills" role="tablist">
