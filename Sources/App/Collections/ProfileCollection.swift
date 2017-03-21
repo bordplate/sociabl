@@ -42,7 +42,14 @@ extension ProfileCollection {
             ])
         }
         
-        try user.followUser(subject: subject)
+        do {
+            try user.follow(user: subject)
+        } catch User.Error.alreadyFollowing {
+            return try JSON(node: [
+                "success": false,
+                "message": "You are already following this person."
+            ])
+        }
         
         return try JSON(node: [
             "success": true

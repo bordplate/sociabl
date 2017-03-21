@@ -20,6 +20,8 @@ final class User: Model {
         case emailUsed
         
         case postExceedsMaxLength
+        
+        case alreadyFollowing
     }
     
     var id: Node?
@@ -133,13 +135,13 @@ extension User {
      - parameters:
         - subject: The user of the user to follow.
      */
-    public func followUser(subject: User) throws {
+    public func follow(user subject: User) throws {
         guard let subjectId = subject.id else {
             throw Abort.badRequest
         }
         
         if try self.children("owner", Follower.self).filter("subject", subjectId).count() > 0 {
-            throw Abort.badRequest
+            throw Error.alreadyFollowing
         }
         
         var followerRelationship = Follower(owner: self.id, subject: subject.id)
