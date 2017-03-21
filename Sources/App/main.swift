@@ -1,6 +1,7 @@
 import Vapor
 import VaporMySQL
 import Auth
+import Foundation
 
 // Prepare Droplet environment
 let drop = Droplet()
@@ -27,6 +28,16 @@ drop.view = renderer
 //   from a leaf.
 renderer.stem.register(ConfigurationTag())
 renderer.stem.register(LocalizationTag())
+
+// Register some globals from the configuration
+// TODO: This is a dirty way to set globals, there is a more "Swifty" way to do it
+struct Configuration {
+    static var maxPostLength = 150
+}
+
+if let maxPostLength = drop.config["post", "max-length"]?.int {
+    Configuration.maxPostLength = maxPostLength
+}
 
 // Set up all collections
 drop.collection(LoginCollection())

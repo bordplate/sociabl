@@ -14,6 +14,14 @@ import Random
 
 /// Social network user.
 final class User: Model {
+    enum Error: Swift.Error {
+        case invalidCredentials
+        case usernameTaken
+        case emailUsed
+        
+        case postExceedsMaxLength
+    }
+    
     var id: Node?
     var email: String
     var username: String
@@ -103,7 +111,8 @@ final class User: Model {
     /// Returns the timeline for the user.
     func timeline() throws -> Node? {
         if let id = self.id {
-            if let subjects = try Follower.subjects(for: id)?.nodeArray {
+            if var subjects = try Follower.subjects(for: id)?.nodeArray {
+                if let id = self.id { subjects += id } // To see your own posts in the timeline as well.
                 return try Post.posts(for: subjects).makeNode(context: ["public": true])
             }
         }
@@ -135,6 +144,15 @@ extension User {
         
         var followerRelationship = Follower(owner: self.id, subject: subject.id)
         try followerRelationship.save()
+    }
+    
+    public func submit(post content: String) throws {
+        if content.count > Configuration.maxPostLength {
+            throw Error.postExceedsMaxLength
+        }
+        
+        var post = Post(content: content, date: Date(), user: self)
+        try post.save()
     }
 }
 
@@ -184,13 +202,6 @@ extension User: Preparation {
 
 extension User: Auth.User {
     // TODO: Erh... Should salt and pepper passwords...
-    
-    enum Error: Swift.Error {
-        case invalidCredentials
-        case usernameTaken
-        case emailUsed
-    }
-    
     static func authenticate(credentials: Credentials) throws -> Auth.User {
         var user: User?
         

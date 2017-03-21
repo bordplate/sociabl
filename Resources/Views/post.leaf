@@ -1,0 +1,5 @@
+<div class="list-group-item">
+	<a href="/#(post.user.username)"><h4>#(post.user.display_name) <small>@#(post.user.username)</small></h4></a>
+	<small>#(post.date)</small>
+	<p>#(post.content)</p>
+</div>

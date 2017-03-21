@@ -7,11 +7,17 @@
 #export("body") {
 	<div class="container">
 		<div class="list-group">
+			<div class="list-group-item post-field">
+				<form method="post" action="/#(logged_user.username)/post">
+					<div class="form-group">
+					  <label for="comment" style="display: none;">Post something:</label>
+					  <textarea class="form-control" rows="5" name="content" placeholder="Post something!" id="post-content"></textarea>
+					</div>
+					<input type="submit" value="#l("Post")" class="btn btn-primary" />
+				</form>
+			</div>
 			#loop(posts, "post") {
-				<div class="list-group-item">
-					<h4>#(post.user.display_name) <small>@#(post.user.username)</small></h4>
-					<p>#(post.content)</p>
-				</div>
+				#embed("post")
 			}
 		</div>
 	</div>

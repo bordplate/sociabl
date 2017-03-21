@@ -3,5 +3,8 @@
     "public": {
         "name": "Sociabl",
         "tagline": "The generic social network"
+    },
+    "posts": {
+        "max-length": 160
     }
 }

@@ -18,6 +18,7 @@ class ProfileCollection: RouteCollection {
         login.get(String.self, handler: self.present)
         
         login.post(User.self, "follow", handler: self.follow)
+        login.post(String.self, "post", handler: self.post)
     }
 }
 
@@ -42,6 +43,37 @@ extension ProfileCollection {
         }
         
         try user.followUser(subject: subject)
+        
+        return try JSON(node: [
+            "success": true
+        ])
+    }
+    
+    /// Username doesn't really matter here, it's just for prettying up links and stuff
+    ///     (and reserve less usernames.
+    public func post(_ request: Request, username: String) throws -> ResponseRepresentable {
+        guard let user = try request.auth.user() as? User else {
+            return try JSON(node: [
+                "success": false,
+                "message": "An error occured."
+            ])
+        }
+        
+        guard let content = request.data["content"]?.string else {
+            return try JSON(node: [
+                "success": false,
+                "message": "No content was received by the server."
+            ])
+        }
+        
+        do {
+            try user.submit(post: content)
+        } catch User.Error.postExceedsMaxLength {
+            return try JSON(node: [
+                "success": false,
+                "message": "The post was too long."
+            ])
+        }
         
         return try JSON(node: [
             "success": true
