@@ -13,11 +13,11 @@
 					
 					#equal(self_profile, false) {
 						#if(following) {
-							<form method="post" action="#(user.id)/unfollow">
+							<form method="post" id="followForm" action="#(user.id)/unfollow">
 								<input type="submit" name="button" class="btn btn-danger" value="#l("Unfollow")" />
 							</form>
 						} ##else() {
-							<form method="post" action="#(user.id)/follow">
+							<form method="post" id="followForm" action="#(user.id)/follow">
 								<input type="submit" name="button" class="btn btn-default" value="#l("Follow")" #equal(authorized, false) { disabled } />
 							</form>	
 						}
@@ -37,4 +37,8 @@
 			}
 		</div>
 	</div>
+}
+
+#export("scripts") {
+	<script src="/scripts/profile.js"></script>
 }
