@@ -206,7 +206,7 @@ extension User {
     }
     
     public func posts() throws -> [Post] {
-        return try self.children(nil, Post.self).all()
+        return try self.children(nil, Post.self).sort("date", .descending).all()
     }
 }
 
