@@ -39,7 +39,6 @@ final class User: Model {
     var exists: Bool = false
     
     init(email: String, username: String, password: String, salt: String, displayName: String, profileDescription: String, profileImgUrl: String, joinDate: Date) {
-        self.id = UUID().uuidString.makeNode()
         self.email = email
         self.username = username
         self.password = password

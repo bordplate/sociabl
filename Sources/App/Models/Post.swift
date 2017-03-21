@@ -11,7 +11,6 @@ final class Post: Model {
     var exists: Bool = false
     
     init(content: String, date: Date, user: User?) {
-        self.id = UUID().uuidString.makeNode()
         self.content = content
         self.date = date
         self.user = user
