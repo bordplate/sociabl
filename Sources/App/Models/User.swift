@@ -23,6 +23,7 @@ final class User: Model {
         
         case alreadyFollowing
         case notFollowing
+        case cantFollowSelf
     }
     
     var id: Node?
@@ -137,6 +138,10 @@ extension User {
         - subject: The user of the user to follow.
      */
     public func follow(user subject: User) throws {
+        if subject.id == self.id {
+            throw Error.cantFollowSelf
+        }
+        
         if try self.isFollowing(user: subject) {
             throw Error.alreadyFollowing
         }
@@ -146,6 +151,10 @@ extension User {
     }
     
     public func unfollow(user subject: User) throws {
+        if subject.id == self.id {
+            throw Error.cantFollowSelf
+        }
+        
         guard let subjectId = subject.id else {
             throw Abort.badRequest
         }

@@ -31,7 +31,13 @@ extension ProfileCollection {
         if let loggedUser = try? request.auth.user() as? User {
             let isFollowing = try? loggedUser?.isFollowing(user: user) ?? false
             
-            return try drop.view.make("profile", ["user": try user.makeProfileNode(), "following": isFollowing ?? false], for: request)
+            let context = try Node(node: [
+                "user": try user.makeProfileNode(),
+                "following": isFollowing ?? false,
+                "self_profile": user.id == loggedUser?.id ?? false
+            ])
+            
+            return try drop.view.make("profile", context, for: request)
         } else {
             return try drop.view.make("profile", ["user": try user.makeProfileNode()], for: request)
         }
