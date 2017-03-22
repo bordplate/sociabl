@@ -33,16 +33,34 @@ renderer.stem.register(LocalizationTag())
 // TODO: This is a dirty way to set globals, there is a more "Swifty" way to do it
 struct Configuration {
     static var maxPostLength = 150
+    
+    static var useAPI = true
+    static var APIHost = ""
 }
 
-if let maxPostLength = drop.config["post", "max-length"]?.int {
-    Configuration.maxPostLength = maxPostLength
-}
+Configuration.maxPostLength = drop.config["app", "post", "max-length"]?.int ?? Configuration.maxPostLength
+Configuration.useAPI        = drop.config["app", "api", "activated"]?.bool ?? Configuration.useAPI
+Configuration.APIHost       = drop.config["app", "api", "host"]?.string ?? Configuration.APIHost
+
 
 // Set up all collections
 drop.collection(LoginCollection())
 drop.collection(RegisterCollection())
 drop.collection(ProfileCollection())
 drop.collection(TimelineCollection())
+
+if Configuration.useAPI {
+    let api = drop.grouped(host: Configuration.APIHost).grouped("v1")
+    
+    let userController = UserController()
+    let postController = PostController()
+    
+    api.resource("post", postController)
+    api.resource("user", userController)
+    
+    api.post("auth", handler: userController.authorize)
+    
+    api.get("timeline", handler: userController.timeline)
+}
 
 drop.run() // Wee

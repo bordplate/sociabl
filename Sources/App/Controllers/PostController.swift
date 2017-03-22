@@ -7,9 +7,34 @@ final class PostController: ResourceRepresentable {
     }
 
     func create(request: Request) throws -> ResponseRepresentable {
-        var post = try request.post()
-        try post.save()
-        return post
+        guard
+            let user = try request.auth.user() as? User,
+            let json = request.json else {
+            return try JSON(node: [
+                "success": false,
+                "message": "An error occured."
+                ])
+        }
+        
+        guard let content = json["content"]?.string else {
+            return try JSON(node: [
+                "success": false,
+                "message": "No content was received by the server."
+                ])
+        }
+        
+        do {
+            try user.submit(post: content)
+        } catch User.Error.postExceedsMaxLength {
+            return try JSON(node: [
+                "success": false,
+                "message": "The post was too long."
+                ])
+        }
+        
+        return try JSON(node: [
+            "success": true
+        ])
     }
 
     func show(request: Request, post: Post) throws -> ResponseRepresentable {

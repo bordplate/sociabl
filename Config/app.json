@@ -6,5 +6,9 @@
     },
     "posts": {
         "max-length": 160
+    },
+    "api": {
+        "activated": true,
+        "host": "api.sociabl.io"
     }
 }
