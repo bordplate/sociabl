@@ -37,9 +37,17 @@ class UserController: ResourceRepresentable {
                 password: password)
             ) as? User
         } catch User.Error.usernameTaken {
-            return ""
+            return JSON([
+                "success": false,
+                "error": true,
+                "message": "User already taken."
+                ])
         } catch User.Error.emailUsed {
-            return ""
+            return JSON([
+                "success": false,
+                "error": true,
+                "message": "Email already used."
+                ])
         }
         
         try user?.save()
