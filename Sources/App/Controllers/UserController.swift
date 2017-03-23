@@ -69,6 +69,14 @@ class UserController: ResourceRepresentable {
         throw Abort.badRequest
     }
     
+    public func find(_ request: Request, user: String) throws -> ResponseRepresentable {
+        if let user = try User.query().filter("username", user).first() {
+            return try user.makeProfileNode().converted(to: JSON.self)
+        }
+        
+        throw Abort.notFound
+    }
+    
     public func makeResource() -> Resource<User> {
         return Resource(index: index,
                         store: register,
@@ -104,6 +112,50 @@ extension UserController {
         }
         
         throw Abort.badRequest
+    }
+    
+    public func follow(_ request: Request, subject: User) throws -> ResponseRepresentable {
+        guard let user = try request.auth.user() as? User else {
+            return try JSON(node: [
+                "success": false,
+                "message": "You are not logged in."
+                ])
+        }
+        
+        do {
+            try user.follow(user: subject)
+        } catch User.Error.alreadyFollowing {
+            return try JSON(node: [
+                "success": false,
+                "message": "You are already following this person."
+                ])
+        }
+        
+        return try JSON(node: [
+            "success": true
+            ])
+    }
+    
+    public func unfollow(_ request: Request, subject: User) throws -> ResponseRepresentable {
+        guard let user = try request.auth.user() as? User else {
+            return try JSON(node: [
+                "success": false,
+                "message": "You are not logged in."
+                ])
+        }
+        
+        do {
+            try user.unfollow(user: subject)
+        } catch User.Error.notFollowing {
+            return try JSON(node: [
+                "success": false,
+                "message": "You can't unfollow someone you're not following."
+                ])
+        }
+        
+        return try JSON(node: [
+            "success": true
+            ])
     }
 }
 

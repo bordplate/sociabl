@@ -61,6 +61,11 @@ if Configuration.useAPI {
     api.post("auth", handler: userController.authorize)
     
     api.get("timeline", handler: userController.timeline)
+    
+    api.get("search", "user", String.self, handler: userController.find)
+    
+    api.post("user", "follow", User.self, handler: userController.follow)
+    api.post("user", "unfollow", User.self, handler: userController.unfollow)
 }
 
 drop.run() // Wee
