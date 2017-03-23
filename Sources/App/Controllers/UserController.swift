@@ -89,7 +89,11 @@ extension UserController {
             try request.auth.login(UserPassword(username: username, password: password))
         }
         
-        return JSON([:])
+        if let user = try request.auth.user() as? User {
+            return JSON(["success": true, "user": try user.makeProfileNode()])
+        }
+        
+        return JSON(["success": false, "error": true, "message": "An unknown error occured."])
     }
     
     public func timeline(_ request: Request) throws -> ResponseRepresentable {
